@@ -18,7 +18,6 @@ const education = [
     degree: "Bachelor of Science in Management Information System",
     school: "Ashesi University",
     period: "Aug 2018 - May 2022",
-    location: "Ghana",
     details: [
       "Dean's list (Jan 2020 - May 2022)",
       "Leadership: Revamped ASC media strategies as Public Relations Representative, increasing business fair participation by 30%"
