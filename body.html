@@ -24,8 +24,9 @@
     <nav aria-label="Sections">
       <a class="nav-x" href="#experience">Experience</a>
       <a class="nav-x" href="#projects">Projects</a>
-      <a class="hide-sm" href="#lab">Lab</a>
-      <a class="hide-sm" href="#skills">Skills</a>
+      <a class="hide-sm hide-md" href="#lab">Lab</a>
+      <a class="hide-sm hide-md" href="#skills">Skills</a>
+      <button class="clr" id="clr" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="clrPop" title="Your clearance level on this site"><span class="clr-l" id="clrName">LV1 · VISITOR</span><span class="clr-bar"><i id="clrBar"></i></span></button>
       <button class="flags" id="flagsBtn" type="button" title="Capture the flag: 3 flags are hidden on this site">⚑ <b id="flagCount">0</b>/3</button>
       <button class="mode" id="mode" type="button" aria-pressed="false" title="Switch to red team mode"><span class="mb">BLUE</span><i></i><span class="mr">RED</span></button>
       <a class="btn sm primary" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
@@ -213,7 +214,10 @@
   <section id="lab">
     <div class="sec-head">
       <div><p class="kicker">Security lab</p><h2>Don't take my word for it. <em>Try it.</em></h2></div>
-      <p class="sec-note">Four small tools built from the work I do every day. Everything runs in your browser.</p>
+      <div class="sec-side">
+        <p class="sec-note">Four small tools built from the work I do every day. Everything runs in your browser.</p>
+        <button class="btn danger sm" id="breachBtn" type="button">Simulate a breach on this site</button>
+      </div>
     </div>
     <div class="lab">
       <div class="lab-tabs" role="tablist" aria-label="Security lab tools">
@@ -291,7 +295,10 @@
   <section id="skills">
     <div class="sec-head">
       <div><p class="kicker">Skills</p><h2>The toolkit.</h2></div>
-      <p class="sec-note">Solid lines are tools I've used on the job or in my own projects. Dashed lines are labs and coursework.</p>
+      <div class="sec-side">
+        <p class="sec-note">Solid lines are tools I've used on the job or in my own projects. Dashed lines are labs and coursework.</p>
+        <div class="row"><button class="btn sm" id="dropBtn" type="button">Drop the toolkit</button><button class="btn sm" id="shakeBtn" type="button" hidden>Shake it</button></div>
+      </div>
     </div>
     <div class="skills">
       <div class="sk spot"><h4>Security operations</h4><div class="chips"><span>Microsoft Sentinel</span><span>Defender for Endpoint</span><span>Fortinet logs</span><span>Kibana</span><span>Incident response</span><span>Rogue network scans</span></div></div>
@@ -356,6 +363,32 @@
 </dialog>
 
 <div id="flash" aria-hidden="true"></div>
+<canvas id="trail" aria-hidden="true"></canvas>
+<div id="clrPop" hidden role="dialog" aria-label="Clearance level"><div id="clrBody"></div></div>
+<div id="lvlup" hidden aria-hidden="true"><div class="lv-in"><p>Clearance upgraded</p><b id="lvlName">ANALYST</b></div></div>
+<div id="breach" hidden role="dialog" aria-modal="true" aria-label="Breach simulation">
+  <div class="br-alarm" aria-hidden="true"></div>
+  <button class="br-x" id="brX" type="button">Skip simulation</button>
+  <div class="br-in" aria-live="polite">
+    <p class="br-k" id="brK">Simulation</p>
+    <h2 class="br-h" id="brH" data-text="INTRUSION DETECTED">INTRUSION DETECTED</h2>
+    <pre class="br-log" id="brLog"></pre>
+    <ol class="br-steps" id="brSteps" hidden></ol>
+    <div class="br-rep" id="brRep" hidden>
+      <h3>Contained in <b id="brTime">4.2s</b></h3>
+      <dl>
+        <div><dt>Attack path</dt><dd>Password spray → mailbox rule → macro malware → lateral movement</dd></div>
+        <div><dt>Data exfiltrated</dt><dd>0 bytes</dd></div>
+        <div><dt>Devices isolated</dt><dd>1</dd></div>
+        <div><dt>Accounts reset</dt><dd>3</dd></div>
+        <div><dt>Root cause</dt><dd>A curious visitor pressed the button</dd></div>
+        <div><dt>Status</dt><dd>Closed · lessons learned filed</dd></div>
+      </dl>
+      <p>That's the job, minus the coffee. I'd love to do it for your team.</p>
+      <div class="row"><a class="btn primary" href="mailto:papa.orleans-bosomtwe@outlook.com?subject=Hire%20the%20responder">Hire the responder</a><button class="btn" id="brClose" type="button">Back to the site</button></div>
+    </div>
+  </div>
+</div>
 <div id="toasts" aria-live="polite"></div>
 <div id="win" hidden role="dialog" aria-modal="true" aria-labelledby="wint">
   <canvas id="confetti" aria-hidden="true"></canvas>

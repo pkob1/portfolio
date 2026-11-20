@@ -934,3 +934,301 @@
     tty.C.triage = function(){ tty.C.lab(); show($('t-triage')); setTimeout(start, 500); return null; };
   }
 })();
+
+/* ===== Clearance levels, breach simulation, toolkit physics, packet trail, decrypting labels ===== */
+(function(){
+  var root = document.documentElement;
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var fine = window.matchMedia && matchMedia('(pointer:fine)').matches;
+  var MAIL = 'papa.orleans-bosomtwe@outlook.com';
+  function $(id){ return document.getElementById(id); }
+  function toast(i, t, s){ if (window.__toast) window.__toast(i, t, s); }
+  function sfx(n){ if (window.__sfx) window.__sfx(n); }
+  function soundOn(){ var b = $('sfx'); return !!b && b.getAttribute('aria-pressed') === 'true'; }
+  var ac = null;
+  function tone(f, d, type, vol, slide){
+    if (!soundOn()) return;
+    if (!ac){ try { ac = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { return; } }
+    var t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = type || 'sine'; o.frequency.setValueAtTime(f, t);
+    if (slide) o.frequency.exponentialRampToValueAtTime(slide, t + d);
+    g.gain.setValueAtTime(vol || .05, t); g.gain.exponentialRampToValueAtTime(.0001, t + d);
+    o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + d + .03);
+  }
+
+  /* ---------- clearance levels ---------- */
+  var LEVELS = [['VISITOR', 0], ['ANALYST', 60], ['SENIOR ANALYST', 150], ['SOC LEAD', 280], ['CISO', 420]];
+  var st = {xp: 0, done: {}};
+  try { var saved = JSON.parse(localStorage.getItem('papa-xp') || 'null'); if (saved && typeof saved.xp === 'number' && saved.done) st = saved; } catch (e) {}
+  function lvl(x){ var i = 0; for (var k = 0; k < LEVELS.length; k++) if (x >= LEVELS[k][1]) i = k; return i; }
+  function cnt(p){ return Object.keys(st.done).filter(function(k){ return k.indexOf(p) === 0; }).length; }
+  var pop = $('clrPop'), clr = $('clr');
+  function ui(){
+    var i = lvl(st.xp), cur = LEVELS[i], nxt = LEVELS[i + 1];
+    $('clrName').textContent = 'LV' + (i + 1) + ' · ' + cur[0];
+    $('clrBar').style.width = (nxt ? (st.xp - cur[1])/(nxt[1] - cur[1])*100 : 100) + '%';
+    clr.classList.toggle('max', !nxt);
+    if (!pop.hidden) renderPop();
+  }
+  function renderPop(){
+    var i = lvl(st.xp), nxt = LEVELS[i + 1], d = st.done;
+    var O = [
+      ['Explore every section', cnt('sec:') + '/8', cnt('sec:') >= 8],
+      ['Open the terminal', '+15', !!d.tty],
+      ['Run 5 different terminal commands', Math.min(5, cnt('cmd:')) + '/5', cnt('cmd:') >= 5],
+      ['Finish a SOC triage shift', '+50', !!d['triage-done']],
+      ['Get a perfect triage shift', '+60', !!d['triage-perfect']],
+      ['X-ray a phishing link', '+25', !!d.phish],
+      ['Check a password', '+25', !!d.pw],
+      ['See what your browser leaks', '+25', !!d.fp],
+      ['Capture the 3 hidden flags', cnt('flag') + '/3', cnt('flag') >= 3],
+      ['Switch to red team', '+20', !!d.red],
+      ['Survive the breach simulation', '+40', !!d.breach],
+      ['Drop the toolkit', '+30', !!d.physics],
+      ['Turn on sound', '+10', !!d.sfx],
+      ['Read to the very bottom', '+20', !!d.bottom]
+    ];
+    $('clrBody').innerHTML =
+      '<div class="cp-top"><b>' + LEVELS[i][0] + '</b><span>' + st.xp + ' XP' + (nxt ? ' · ' + (nxt[1] - st.xp) + ' to ' + nxt[0] : ' · maximum clearance') + '</span></div>' +
+      (nxt ? '' : '<p class="cp-ciso">You have seen everything on this site. Last step: talk to the human. <a href="mailto:' + MAIL + '?subject=' + encodeURIComponent('I reached CISO clearance on your site') + '">Email Papa ↗</a></p>') +
+      '<ul class="cp-list">' + O.map(function(o){ return '<li' + (o[2] ? ' class="done"' : '') + '><i>' + (o[2] ? '✓' : '○') + '</i><span>' + o[0] + '</span><em>' + o[1] + '</em></li>'; }).join('') + '</ul>';
+  }
+  function floatXp(n){
+    var s = document.createElement('span'); s.className = 'xpf'; s.textContent = '+' + n + ' XP';
+    clr.appendChild(s); setTimeout(function(){ s.remove(); }, 1300);
+  }
+  function levelUp(i){
+    var b = $('lvlup'); $('lvlName').textContent = LEVELS[i][0]; $('lvlName').setAttribute('data-text', LEVELS[i][0]);
+    b.hidden = false; b.classList.remove('go'); void b.offsetWidth; b.classList.add('go');
+    sfx('win'); setTimeout(function(){ b.hidden = true; }, 2700);
+    toast('▲', 'Clearance upgraded: ' + LEVELS[i][0], i === 4 ? 'Maximum clearance. Open the clearance panel for your reward.' : 'Keep exploring to level up.');
+  }
+  function xp(key, n){
+    if (st.done[key]) return;
+    st.done[key] = 1; var before = lvl(st.xp); st.xp += n;
+    try { localStorage.setItem('papa-xp', JSON.stringify(st)); } catch (e) {}
+    ui(); floatXp(n);
+    var after = lvl(st.xp); if (after > before) setTimeout(function(){ levelUp(after); }, 350);
+  }
+  window.__xp = xp;
+  ui();
+  clr.addEventListener('click', function(e){
+    e.stopPropagation(); pop.hidden = !pop.hidden; clr.setAttribute('aria-expanded', String(!pop.hidden)); if (!pop.hidden) renderPop();
+  });
+  document.addEventListener('click', function(e){ if (!pop.hidden && !pop.contains(e.target)){ pop.hidden = true; clr.setAttribute('aria-expanded', 'false'); } });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && !pop.hidden){ pop.hidden = true; clr.setAttribute('aria-expanded', 'false'); clr.focus(); } });
+
+  /* XP hooks: watch the rest of the page rather than editing every feature */
+  ['experience','projects','lab','research','skills','education','other','contact'].forEach(function(id){
+    var el = $(id); if (!el || !('IntersectionObserver' in window)) return;
+    var io = new IntersectionObserver(function(es){ if (es[0].isIntersecting){ xp('sec:' + id, 10); io.disconnect(); } }, {threshold: .25});
+    io.observe(el);
+  });
+  function watch(el, fn, opts){ if (el) new MutationObserver(fn).observe(el, opts || {childList: true, subtree: true, characterData: true}); }
+  watch($('tty'), function(){ if ($('tty').open) xp('tty', 15); }, {attributes: true, attributeFilter: ['open']});
+  watch($('triStage'), function(){ var e = $('triStage').querySelector('.tri-end .big'); if (e){ xp('triage-done', 50); if (/^8\//.test(e.textContent)) xp('triage-perfect', 60); } });
+  watch($('phOut'), function(){ if ($('phOut').querySelector('.ph-res')) xp('phish', 25); });
+  watch($('pwBreach'), function(){ var t = $('pwBreach').textContent; if (t !== '–' && t !== 'Checking…') xp('pw', 25); });
+  var fpTab = $('t-fp'); if (fpTab) fpTab.addEventListener('click', function(){ xp('fp', 25); });
+  function flagsNow(){ var n = +($('flagCount').textContent || 0); for (var i = 1; i <= n; i++) xp('flag' + i, 40); }
+  watch($('flagCount'), flagsNow); flagsNow();
+  watch(root, function(){ if (root.getAttribute('data-mode') === 'red') xp('red', 20); }, {attributes: true, attributeFilter: ['data-mode']});
+  watch($('sfx'), function(){ if (soundOn()) xp('sfx', 10); }, {attributes: true, attributeFilter: ['aria-pressed']});
+  addEventListener('scroll', function(){ var m = document.documentElement.scrollHeight - innerHeight; if (m > 0 && scrollY/m > .97) xp('bottom', 20); }, {passive: true});
+
+  /* ---------- breach simulation ---------- */
+  var LOG = [
+    '185.220.101.47 → vpn.contoso.ca   password spray, 412 attempts',
+    'auth success  j.mensah@contoso.ca  from 185.220.101.47',
+    'mailbox rule created  forward all → x9-drop@proton.me',
+    'FIN-LT-042  powershell.exe -nop -w hidden -enc JABzAD0ATgBl…',
+    'FIN-LT-042  lsass.exe memory read by rundll32.exe',
+    'SMB lateral movement  FIN-LT-042 → FILESRV-01',
+    '2.3 GB staged  C:\\ProgramData\\tmp\\a.7z',
+    'outbound 45.137.21.9:443  exfiltration attempt started'
+  ];
+  var STEPS = [
+    ['Isolate FIN-LT-042 from the network', 'Defender for Endpoint'],
+    ['Revoke sessions, reset 3 accounts', 'Entra ID'],
+    ['Delete the malicious forwarding rule', 'Exchange Online'],
+    ['Block 185.220.101.47 and 45.137.21.9', 'Fortinet'],
+    ['Hunt for persistence across every device', 'Sentinel KQL'],
+    ['Open the incident and brief stakeholders', 'ServiceNow']
+  ];
+  var br = null, brEl = $('breach');
+  function setH(t){ var h = $('brH'); h.textContent = t; h.setAttribute('data-text', t); }
+  function stopBreach(){
+    if (!br) return; br.timers.forEach(clearTimeout); br = null;
+    document.body.classList.remove('quake'); root.classList.remove('br-on', 'br-red', 'br-blue'); brEl.hidden = true;
+    var b = $('breachBtn'); if (b) b.focus({preventScroll: true});
+  }
+  function breach(){
+    if (br) return;
+    try { $('tty').close(); } catch (e) {}
+    var timers = []; br = {timers: timers};
+    function at(ms, fn){ timers.push(setTimeout(fn, reduce ? Math.min(ms, ms/3) : ms)); }
+    brEl.hidden = false; root.classList.add('br-on', 'br-red');
+    $('brK').textContent = 'Simulation · red alert'; setH('INTRUSION DETECTED');
+    $('brLog').textContent = ''; $('brLog').hidden = false; $('brSteps').innerHTML = ''; $('brSteps').hidden = true; $('brRep').hidden = true;
+    $('brX').hidden = false; $('brX').focus({preventScroll: true});
+    for (var k = 0; k < 4; k++) at(k*460, function(){ tone(380, .42, 'sawtooth', .05, 900); });
+    if (!reduce) document.body.classList.add('quake');
+    var base = Date.now();
+    LOG.forEach(function(l, i){
+      at(180 + i*200, function(){
+        var t = new Date(base + i*1370).toTimeString().slice(0, 8);
+        $('brLog').textContent += '[' + t + '] ' + l + '\n'; $('brLog').scrollTop = 1e6; tone(1100 + i*60, .03, 'square', .02);
+      });
+    });
+    at(2000, function(){
+      document.body.classList.remove('quake'); root.classList.remove('br-red'); root.classList.add('br-blue');
+      $('brK').textContent = 'Papa is on shift'; setH('CONTAINING THREAT'); tone(260, .4, 'sine', .06, 880);
+      $('brSteps').hidden = false;
+      $('brSteps').innerHTML = STEPS.map(function(s){ return '<li><span class="bs-t">' + s[0] + '</span><span class="bs-s">' + s[1] + '</span><span class="bs-bar"><i></i></span><b>…</b></li>'; }).join('');
+      br.t0 = performance.now();
+      var lis = $('brSteps').children;
+      STEPS.forEach(function(s, i){
+        at(150 + i*520, function(){ lis[i].classList.add('run'); });
+        at(150 + i*520 + 470, function(){ lis[i].classList.remove('run'); lis[i].classList.add('ok'); lis[i].querySelector('b').textContent = '✓'; tone(620 + i*70, .12, 'sine', .06); });
+      });
+      at(150 + STEPS.length*520 + 450, function(){
+        $('brTime').textContent = ((performance.now() - br.t0)/1000).toFixed(1) + 's';
+        $('brK').textContent = 'Incident INC-0001 · closed'; setH('THREAT CONTAINED');
+        $('brLog').hidden = true; $('brSteps').hidden = true; $('brRep').hidden = false; $('brX').hidden = true;
+        $('brClose').focus({preventScroll: true});
+        sfx('win'); xp('breach', 40);
+      });
+    });
+  }
+  $('breachBtn').addEventListener('click', breach);
+  $('brX').addEventListener('click', stopBreach);
+  $('brClose').addEventListener('click', stopBreach);
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && br) stopBreach(); });
+
+  /* ---------- drop the toolkit (Matter.js physics, loaded only when used) ---------- */
+  var phys = null, dropBtn = $('dropBtn'), shakeBtn = $('shakeBtn');
+  function loadMatter(){
+    return new Promise(function(res, rej){
+      if (window.Matter) return res();
+      var s = document.createElement('script');
+      s.src = 'https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js';
+      s.onload = function(){ window.Matter ? res() : rej(); }; s.onerror = rej; document.head.appendChild(s);
+    });
+  }
+  function dropToolkit(){
+    var M = window.Matter, grid = document.querySelector('.skills');
+    var H = Math.max(grid.offsetHeight, 520), arena = document.createElement('div');
+    arena.className = 'arena'; arena.style.height = H + 'px';
+    arena.innerHTML = '<span class="arena-l">Drag and fling the skills. Yes, really.</span>';
+    grid.parentNode.insertBefore(arena, grid.nextSibling); grid.hidden = true;
+    var W = arena.clientWidth, eng = M.Engine.create(), bodies = [], els = [];
+    eng.gravity.y = 1.15;
+    var wall = {isStatic: true, restitution: .2};
+    M.Composite.add(eng.world, [
+      M.Bodies.rectangle(W/2, H + 40, W*3, 80, wall), M.Bodies.rectangle(-40, H/2, 80, H*4, wall),
+      M.Bodies.rectangle(W + 40, H/2, 80, H*4, wall), M.Bodies.rectangle(W/2, -H*1.6, W*3, 80, wall)
+    ]);
+    document.querySelectorAll('.skills .sk').forEach(function(card, ci){
+      var lab = card.classList.contains('lab');
+      card.querySelectorAll('.chips span').forEach(function(c){
+        var el = document.createElement('span'); el.className = 'pchip c' + (ci % 6) + (lab ? ' lab' : ''); el.textContent = c.textContent;
+        arena.appendChild(el);
+        var w = el.offsetWidth, h = el.offsetHeight;
+        var b = M.Bodies.rectangle(w/2 + Math.random()*(W - w), -Math.random()*H*1.3 - h, w, h, {chamfer: {radius: h/2 - 1}, restitution: .4, friction: .25, frictionAir: .012, density: .002});
+        M.Body.setAngle(b, (Math.random() - .5)*1.2); b.plugin = {w: w, h: h};
+        bodies.push(b); els.push(el);
+      });
+    });
+    M.Composite.add(eng.world, bodies);
+    var mouse = M.Mouse.create(arena);
+    ['wheel', 'mousewheel', 'DOMMouseScroll'].forEach(function(ev){ arena.removeEventListener(ev, mouse.mousewheel); });
+    M.Composite.add(eng.world, M.MouseConstraint.create(eng, {mouse: mouse, constraint: {stiffness: .18, render: {visible: false}}}));
+    var run = true, last = performance.now();
+    (function tick(now){
+      if (!run) return;
+      M.Engine.update(eng, Math.min(32, (now || last) - last) || 16.7); last = now || last;
+      for (var i = 0; i < bodies.length; i++){
+        var b = bodies[i];
+        els[i].style.transform = 'translate(' + (b.position.x - b.plugin.w/2).toFixed(1) + 'px,' + (b.position.y - b.plugin.h/2).toFixed(1) + 'px) rotate(' + b.angle.toFixed(3) + 'rad)';
+      }
+      requestAnimationFrame(tick);
+    })(last);
+    phys = {
+      stop: function(){ run = false; M.Engine.clear(eng); arena.remove(); grid.hidden = false; },
+      shake: function(){ bodies.forEach(function(b){ M.Body.setVelocity(b, {x: (Math.random() - .5)*28, y: -12 - Math.random()*18}); M.Body.setAngularVelocity(b, (Math.random() - .5)*.4); }); }
+    };
+    dropBtn.textContent = 'Put it back'; shakeBtn.hidden = false; xp('physics', 30); tone(140, .35, 'triangle', .07, 60);
+  }
+  dropBtn.addEventListener('click', function(){
+    if (phys){ phys.stop(); phys = null; dropBtn.textContent = 'Drop the toolkit'; shakeBtn.hidden = true; return; }
+    dropBtn.disabled = true; dropBtn.textContent = 'Loading physics…';
+    loadMatter().then(function(){ dropBtn.disabled = false; dropToolkit(); })
+      .catch(function(){ dropBtn.disabled = false; dropBtn.textContent = 'Drop the toolkit'; toast('!', 'Physics engine unavailable', 'The physics library could not load here. It works on the live site.'); });
+  });
+  shakeBtn.addEventListener('click', function(){ if (phys){ phys.shake(); tone(90, .3, 'sawtooth', .05, 300); } });
+
+  /* ---------- packet trail + sonar ping ---------- */
+  if (fine && !reduce){
+    var tc = $('trail'), tx = tc.getContext('2d'), parts = [], pings = [], live = false, TW = 0, TH = 0, tdpr = 1;
+    function tsize(){ tdpr = Math.min(devicePixelRatio || 1, 2); TW = innerWidth; TH = innerHeight; tc.width = TW*tdpr; tc.height = TH*tdpr; tx.setTransform(tdpr, 0, 0, tdpr, 0, 0); }
+    tsize(); addEventListener('resize', tsize);
+    function kick(){ if (!live){ live = true; requestAnimationFrame(draw); } }
+    var lx = 0, ly = 0;
+    addEventListener('pointermove', function(e){
+      var dx = e.clientX - lx, dy = e.clientY - ly; if (dx*dx + dy*dy < 90) return; lx = e.clientX; ly = e.clientY;
+      parts.push({x: e.clientX, y: e.clientY, vx: (Math.random() - .5)*.6, vy: (Math.random() - .5)*.6, life: 1, s: 2 + Math.random()*2.5, hot: Math.random() < .12});
+      if (parts.length > 70) parts.shift(); kick();
+    }, {passive: true});
+    addEventListener('pointerdown', function(e){ if (!root.classList.contains('br-on')){ pings.push({x: e.clientX, y: e.clientY, r: 0}); kick(); } }, {passive: true});
+    function draw(){
+      tx.clearRect(0, 0, TW, TH);
+      var glow = window.__glow || '92,200,255';
+      for (var i = parts.length - 1; i >= 0; i--){
+        var p = parts[i]; p.x += p.vx; p.y += p.vy; p.life -= .028;
+        if (p.life <= 0){ parts.splice(i, 1); continue; }
+        tx.fillStyle = p.hot ? 'rgba(255,181,71,' + p.life + ')' : 'rgba(' + glow + ',' + (p.life*.85) + ')';
+        tx.fillRect(p.x - p.s/2, p.y - p.s/2, p.s, p.s);
+      }
+      for (var j = pings.length - 1; j >= 0; j--){
+        var g = pings[j]; g.r += 3.2; var a = 1 - g.r/90;
+        if (a <= 0){ pings.splice(j, 1); continue; }
+        tx.strokeStyle = 'rgba(' + glow + ',' + a + ')'; tx.lineWidth = 1.5;
+        tx.beginPath(); tx.arc(g.x, g.y, g.r, 0, 6.29); tx.stroke();
+        tx.beginPath(); tx.arc(g.x, g.y, g.r*.55, 0, 6.29); tx.stroke();
+      }
+      if (parts.length || pings.length) requestAnimationFrame(draw); else { live = false; tx.clearRect(0, 0, TW, TH); }
+    }
+  }
+
+  /* ---------- section labels decrypt as they scroll in ---------- */
+  if (!reduce && 'IntersectionObserver' in window){
+    var G = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*<>/';
+    var kio = new IntersectionObserver(function(es){
+      es.forEach(function(en){
+        if (!en.isIntersecting) return; kio.unobserve(en.target);
+        var el = en.target, fin = el.textContent, f = 0;
+        el.setAttribute('aria-label', fin);
+        (function tk(){
+          el.textContent = fin.split('').map(function(ch, i){ return ch === ' ' || f > i*1.2 + 4 ? ch : G[(Math.random()*G.length)|0]; }).join('');
+          if (f++ < fin.length*1.2 + 6) setTimeout(tk, 30); else el.textContent = fin;
+        })();
+      });
+    }, {threshold: .9});
+    document.querySelectorAll('section .kicker').forEach(function(k){ kio.observe(k); });
+  }
+
+  /* ---------- terminal commands + XP for using them ---------- */
+  var tty = window.__tty;
+  if (tty && tty.C){
+    var C = tty.C, oldHelp = C.help;
+    C.breach = function(){ setTimeout(breach, 200); return '<span class="r">Simulating an intrusion…</span>'; };
+    C.clearance = function(){ var i = lvl(st.xp); return 'Clearance: <span class="c">' + LEVELS[i][0] + '</span> · ' + st.xp + ' XP' + (LEVELS[i + 1] ? ' · ' + (LEVELS[i + 1][1] - st.xp) + ' XP to ' + LEVELS[i + 1][0] : ' · maximum'); };
+    C.xp = C.clearance;
+    C.help = function(){ return oldHelp() + '\n<span class="c">Chaos</span>\n  breach      simulate an attack on this site\n  clearance   your clearance level'; };
+    Object.keys(C).forEach(function(k){
+      var fn = C[k]; if (typeof fn !== 'function') return;
+      var name = k.split(' ')[0];
+      C[k] = function(){ xp('cmd:' + name, 5); return fn.apply(this, arguments); };
+    });
+  }
+})();
