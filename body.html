@@ -1,0 +1,409 @@
+<title>Papa Kobina Orleans-Bosomtwe</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="site.css">
+
+<canvas id="net" aria-hidden="true"></canvas>
+<!--
+  Hey, you read the source. Real analysts do.
+  flag{v13w_s0urc3_l1k3_4_pr0}
+  Submit it in the site terminal (press /):  submit flag{...}
+-->
+<div class="aurora" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
+<div class="cursor-glow" id="glow" aria-hidden="true"></div>
+<div class="ret-dot" id="rdot" aria-hidden="true"></div><div class="ret-ring" id="rring" aria-hidden="true"></div>
+<div id="boot" aria-hidden="true"><div class="boot-in"><pre id="bootlog"></pre><div class="boot-bar"><i id="bootbar"></i></div><p class="boot-skip">Press any key or tap to skip</p></div></div>
+
+<header class="top">
+  <div class="scan" aria-hidden="true"><i id="scanbar"></i></div>
+  <div class="wrap">
+    <a class="mark" href="#top"><i>PO</i><span>Orleans-Bosomtwe</span></a>
+    <nav aria-label="Sections">
+      <a class="nav-x" href="#experience">Experience</a>
+      <a class="nav-x" href="#projects">Projects</a>
+      <a class="hide-sm hide-md" href="#lab">Lab</a>
+      <a class="hide-sm hide-md" href="#skills">Skills</a>
+      <button class="clr" id="clr" type="button" aria-haspopup="true" aria-expanded="false" aria-controls="clrPop" title="Your clearance level on this site"><span class="clr-l" id="clrName">LV1 · VISITOR</span><span class="clr-bar"><i id="clrBar"></i></span></button>
+      <button class="flags" id="flagsBtn" type="button" title="Capture the flag: 3 flags are hidden on this site">⚑ <b id="flagCount">0</b>/3</button>
+      <button class="mode" id="mode" type="button" aria-pressed="false" title="Switch to red team mode"><span class="mb">BLUE</span><i></i><span class="mr">RED</span></button>
+      <a class="btn sm primary" href="resume.pdf" target="_blank" rel="noopener">Resume</a>
+    </nav>
+  </div>
+  <div class="kevbar" aria-label="Newest entries in CISA's Known Exploited Vulnerabilities catalog"><span class="kev-l"><i aria-hidden="true"></i><b id="kevlabel">CISA KEV</b></span><div class="kev-t"><div class="kev-track" id="kevtrack"></div></div></div>
+</header>
+
+<main class="wrap" id="top">
+  <div class="hero">
+    <div>
+      <div class="pill in"><span class="pulse" aria-hidden="true"></span>Open to work · Eligible to work in Canada</div>
+      <p class="eyebrow in d1">Information Security Analyst · Guelph, ON</p>
+      <h1 class="in d2" aria-label="Papa Kobina Orleans-Bosomtwe">Papa Kobina <span class="grad">Orleans-Bosomtwe</span></h1>
+      <p class="lead in d3">I hunt through alerts, keep organizations audit-ready, and build tools that tell teams <b>which new vulnerabilities actually affect them</b>. MSc in Cybersecurity &amp; Threat Intelligence, with hands-on time in Microsoft Sentinel, Defender, Entra ID and ISO 27001 / 22301 programs.</p>
+      <div class="ctas in d4">
+        <a class="btn primary" href="mailto:papa.orleans-bosomtwe@outlook.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>Email me</a>
+        <a class="btn" href="resume.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14"/></svg>Resume (PDF)</a>
+        <a class="btn" href="https://www.linkedin.com/in/papakobosomtwe" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9.5h4V21H3V9.5Zm7 0h3.8v1.6h.06c.53-1 1.84-2.06 3.79-2.06 4.05 0 4.8 2.67 4.8 6.13V21h-4v-5.2c0-1.24-.02-2.84-1.73-2.84-1.73 0-2 1.35-2 2.75V21h-4V9.5Z"/></svg>LinkedIn</a>
+      </div>
+      <div class="badges in d5" aria-label="Credentials and target roles">
+        <span class="badge"><b>✓</b> CompTIA Security+</span>
+        <span class="badge"><b>✓</b> ISC2 CC</span>
+        <span class="badge"><b>✓</b> MSc, U of Guelph</span>
+        <span class="badge">InfoSec · GRC · SOC · IT Support</span>
+        <span class="badge">Guelph · KW · GTA · Ottawa · Remote</span>
+      </div>
+    </div>
+
+    <div class="hero-vis">
+    <canvas id="globe" aria-hidden="true"></canvas>
+    <div class="g-label" id="glabel" aria-hidden="true">GUELPH · PROTECTED</div>
+    <div class="term in d3" aria-label="Example VulnIntel alert feed">
+      <div class="term-bar"><span></span><span></span><span></span><em>vulnintel — alerts</em></div>
+      <div class="term-body" id="term">
+        <div class="cmd">vulnintel match --inventory prod --since 24h</div>
+        <div class="out">› 1,284 CVEs scanned · 3 affect your stack</div>
+        <div class="alert"><span class="sev c">CRIT 10.0</span><span class="id">CVE-2024-3400<small>PAN-OS</small></span><span class="kev">KEV</span></div>
+        <div class="alert"><span class="sev c">CRIT 9.8</span><span class="id">CVE-2023-34362<small>MOVEit</small></span><span class="kev">KEV</span></div>
+        <div class="alert"><span class="sev h">HIGH 9.4</span><span class="id">CVE-2023-4966<small>NetScaler</small></span><span class="kev">KEV</span></div>
+        <div class="out">› 3 alerts sent to inbox, sorted by exploitation <span class="caret"></span></div>
+      </div>
+      <div class="term-foot">Sample output from VulnIntel, a tool I built and run</div>
+    </div>
+    <p class="globe-tag" aria-hidden="true"><i></i><span class="gt-b">Simulated attacks on Guelph · <b class="blocked">0</b> blocked</span><span class="gt-r">Red team mode · <b class="blocked">0</b> simulated pen-tests launched</span></p>
+    </div>
+  </div>
+
+  <div class="stats" aria-label="Highlights">
+    <div class="stat spot"><b><span data-count="15">15</span><span class="arrow">→</span><span data-count="5" data-from="15">5</span></b><span>monthly non-compliant assets after I took over tracking</span></div>
+    <div class="stat spot"><b><span data-count="120">120</span>+</b><span>IT tickets resolved every month</span></div>
+    <div class="stat spot"><b><span data-count="90">90</span>%</b><span>first-contact resolution rate</span></div>
+    <div class="stat spot"><b><span data-count="2">2</span></b><span>live security tools built and shipped, plus a published arXiv paper</span></div>
+  </div>
+
+  <div class="marquee" aria-label="Tools I use">
+    <div class="track">
+      <span>Microsoft Sentinel</span><span>Defender for Endpoint</span><span>Entra ID</span><span>Intune</span><span>Purview</span><span>ServiceNow</span><span>ISO 27001</span><span>ISO 22301</span><span>PCI DSS</span><span>KnowBe4</span><span>Fortinet</span><span>CISA KEV</span><span>NVD</span><span>Python</span><span>FastAPI</span><span>React</span><span>PostgreSQL</span><span>Docker</span>
+      <span aria-hidden="true">Microsoft Sentinel</span><span aria-hidden="true">Defender for Endpoint</span><span aria-hidden="true">Entra ID</span><span aria-hidden="true">Intune</span><span aria-hidden="true">Purview</span><span aria-hidden="true">ServiceNow</span><span aria-hidden="true">ISO 27001</span><span aria-hidden="true">ISO 22301</span><span aria-hidden="true">PCI DSS</span><span aria-hidden="true">KnowBe4</span><span aria-hidden="true">Fortinet</span><span aria-hidden="true">CISA KEV</span><span aria-hidden="true">NVD</span><span aria-hidden="true">Python</span><span aria-hidden="true">FastAPI</span><span aria-hidden="true">React</span><span aria-hidden="true">PostgreSQL</span><span aria-hidden="true">Docker</span>
+    </div>
+  </div>
+
+  <section id="experience">
+    <div class="sec-head">
+      <div><p class="kicker">Experience</p><h2>Security &amp; IT work <em>that shipped results.</em></h2></div>
+      <p class="sec-note">Detection, identity, audit and awareness across Microsoft's security stack.</p>
+    </div>
+
+    <div class="timeline">
+      <article class="job spot">
+        <div class="job-in">
+          <div class="job-head">
+            <h3>Information Security Analyst · <span class="org">Margins Group</span></h3>
+            <span class="when">Sep 2022 – Nov 2023</span>
+          </div>
+          <p class="job-sum">Security operations, identity administration and audit readiness for a multi-company group.</p>
+          <div class="quad">
+            <div class="cell">
+              <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>Detection &amp; response</h4>
+              <ul>
+                <li>Investigated alerts and ran threat hunts in Microsoft Sentinel, correlating events and supporting incident response.</li>
+                <li>Monitored endpoint posture and malicious behaviour in Defender for Endpoint and supported remediation.</li>
+                <li>Ran rogue network scans and reviewed Fortinet firewall logs, following findings through with owners.</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></svg>Identity &amp; compliance</h4>
+              <ul>
+                <li>Administered Entra ID: provisioning, deprovisioning, security groups and access reviews.</li>
+                <li>Tracked non-compliant assets to resolution in ServiceNow and Endpoint Manager, <strong>cutting monthly non-compliance from 15 to 5</strong>.</li>
+                <li>Supported data classification and sensitivity labels in Microsoft Purview.</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/></svg>GRC &amp; audit</h4>
+              <ul>
+                <li>Built the risk register and documentation for an ISO 22301 audit and wrote BCMS recovery plans.</li>
+                <li>Implemented controls and ran gap assessments against ISO 27001, plus vulnerability and risk assessments.</li>
+                <li>Updated policies and PCI DSS audit documentation, gathered evidence and reviewed vendor security questionnaires.</li>
+              </ul>
+            </div>
+            <div class="cell">
+              <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2 3 6v6c0 5 3.8 9.3 9 10 5.2-.7 9-5 9-10V6l-9-4Z"/></svg>Awareness &amp; reporting</h4>
+              <ul>
+                <li>Ran the KnowBe4 program: phishing simulations, new-hire onboarding and monthly staff sessions.</li>
+                <li>Kept the open-items tracker, chased overdue actions and reported status to management.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="job spot">
+        <div class="job-in">
+          <div class="job-head">
+            <h3>IT Security Intern · <span class="org">Perfect Business Services Ltd.</span></h3>
+            <span class="when">Jun 2021 – Sep 2021</span>
+          </div>
+          <ul class="mt">
+            <li>Resolved <strong>120+ support requests a month at 90% first-contact resolution</strong>: password resets, logins and hardware.</li>
+            <li>Ran daily user access reviews and handled account provisioning and deprovisioning.</li>
+            <li>Kept the IT asset inventory and hardware lifecycle records; supported patch tracking and software rollouts.</li>
+            <li>Wrote onboarding guides and awareness content on access control and secure practices.</li>
+          </ul>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <section id="projects">
+    <div class="sec-head">
+      <div><p class="kicker">Projects</p><h2>Security tools <em>I built and run.</em></h2></div>
+      <p class="sec-note">Both are live. Open them and click around.</p>
+    </div>
+
+    <div class="bento">
+      <article class="b-main spot">
+        <div class="p-top"><span class="tag"><i></i>Live</span><span class="p-meta">Independent · Nov 2026 – present</span></div>
+        <h3>VulnIntel</h3>
+        <p class="pitch">Vulnerability intelligence that tells you which new CVEs hit the software you actually run, so you patch what matters first.</p>
+        <ul>
+          <li>Matches new CVEs from NVD and actively exploited flaws from CISA KEV against each user's software inventory.</li>
+          <li>Ranks by severity and active exploitation and delivers to an alerts inbox linked to the source records.</li>
+          <li>Pen-tested my own app before launch: found and fixed a cross-user data leak and secrets in the Docker image.</li>
+          <li>Powers my daily plain-English breach and vulnerability roundup on LinkedIn.</li>
+        </ul>
+        <ul class="stack" aria-label="Built with"><li>FastAPI</li><li>React</li><li>TypeScript</li><li>PostgreSQL</li><li>Docker</li><li>NVD API</li><li>CISA KEV</li></ul>
+        <div class="links">
+          <a class="btn primary sm" href="https://vulnintel.onrender.com" target="_blank" rel="noopener">Open live demo ↗</a>
+          <span class="note">Free hosting: first load can take ~30s</span>
+        </div>
+      </article>
+
+      <article class="b-side spot">
+        <div class="p-top"><span class="tag"><i></i>Live</span><span class="p-meta">Built with Base44</span></div>
+        <h3>VendorGuard</h3>
+        <svg class="gauge" viewBox="0 0 200 120" role="img" aria-label="Example vendor risk score gauge reading 72 out of 100">
+          <defs><linearGradient id="gg" x1="0" x2="1"><stop offset="0" stop-color="#4fe0a0"/><stop offset=".55" stop-color="#ffb547"/><stop offset="1" stop-color="#ff6b6b"/></linearGradient></defs>
+          <path d="M20 105 A80 80 0 0 1 180 105" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="14" stroke-linecap="round"/>
+          <path id="garc" d="M20 105 A80 80 0 0 1 180 105" fill="none" stroke="url(#gg)" stroke-width="14" stroke-linecap="round" stroke-dasharray="251.3" stroke-dashoffset="70.4"/>
+          <text x="100" y="92" text-anchor="middle" fill="#e9eef8" font-size="38" font-weight="800">72</text>
+          <text x="100" y="114" text-anchor="middle" fill="#94a1b9" font-size="11" font-family="Geist Mono, monospace">RISK SCORE · TIER 2</text>
+        </svg>
+        <p>Third-party risk management: vendor watchlist with 0–100 risk scores and tiers, a compliance tracker, certificate-expiry tracking and alerts, searchable by industry, region and risk.</p>
+        <div class="links"><a class="btn sm" href="https://vendor-guard-b0c94021.base44.app" target="_blank" rel="noopener">Open live app ↗</a></div>
+      </article>
+
+      <article class="b-sm spot">
+        <span class="p-meta">MSc project · University of Guelph</span>
+        <h3>Phishing URL detection</h3>
+        <p>Prepared and analyzed URL data in Python (pandas) and trained Random Forest and Naive Bayes models to flag phishing links.</p>
+        <div class="links"><a class="btn sm" href="https://github.com/pkob1/AI_ML_Phishing_Detection" target="_blank" rel="noopener">View the code ↗</a></div>
+      </article>
+      <article class="b-sm spot">
+        <span class="p-meta">5-person Scrum team · Ashesi University</span>
+        <h3>Twitter sentiment vs. stock price</h3>
+        <p>Flask app scoring company tweets with RoBERTa, stored in Firebase and charted against stock prices. I built collection and sentiment code and presented weekly to industry partners.</p>
+      </article>
+    </div>
+  </section>
+
+  <section id="lab">
+    <div class="sec-head">
+      <div><p class="kicker">Security lab</p><h2>Don't take my word for it. <em>Try it.</em></h2></div>
+      <div class="sec-side">
+        <p class="sec-note">Four small tools built from the work I do every day. Everything runs in your browser.</p>
+        <button class="btn danger sm" id="breachBtn" type="button">Simulate a breach on this site</button>
+      </div>
+    </div>
+    <div class="lab">
+      <div class="lab-tabs" role="tablist" aria-label="Security lab tools">
+        <button role="tab" type="button" id="t-triage" aria-controls="p-triage" aria-selected="true">SOC triage game</button>
+        <button role="tab" type="button" id="t-phish" aria-controls="p-phish" aria-selected="false" tabindex="-1">Phishing URL x-ray</button>
+        <button role="tab" type="button" id="t-pass" aria-controls="p-pass" aria-selected="false" tabindex="-1">Password breach check</button>
+        <button role="tab" type="button" id="t-fp" aria-controls="p-fp" aria-selected="false" tabindex="-1">What your browser leaks</button>
+      </div>
+
+      <div class="lab-panel" role="tabpanel" id="p-triage" aria-labelledby="t-triage">
+        <div class="tri-hud" aria-live="polite"><span>Alert <b id="triN">0</b>/8</span><span>Correct <b id="triS">0</b></span><span>Streak <b id="triK">0</b></span><span class="tri-time">Shift clock <b id="triT">0.0s</b></span></div>
+        <div id="triStage">
+          <div class="tri-intro">
+            <h3>Can you triage like a SOC analyst?</h3>
+            <p>Eight alerts are about to hit the queue from Microsoft Sentinel, Defender for Endpoint, Entra ID and the email gateway. Escalate the real threats. Close the false positives. I worked this queue for real at Margins Group.</p>
+            <div class="row"><button class="btn primary" id="triGo" type="button">Start my shift</button><span class="note">Keyboard: E escalate · F false positive · Enter next</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lab-panel" role="tabpanel" id="p-phish" aria-labelledby="t-phish" hidden>
+        <label class="lab-l" for="phUrl">Paste any link. It's analyzed as text and never opened.</label>
+        <div class="lab-in"><input id="phUrl" type="text" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://example.com/login"><button class="btn primary" id="phGo" type="button">X-ray this link</button></div>
+        <div class="ph-samples"><span>Try one:</span>
+          <button type="button" data-u="http://paypa1-secure-login.xyz/verify/account?id=88213">Fake PayPal</button>
+          <button type="button" data-u="https://login.microsoftonline.com.account-verify.top/reset/password">Microsoft look-alike</button>
+          <button type="button" data-u="http://secure-update@203.0.113.45:8080/office365/login.html">The @ trick</button>
+          <button type="button" data-u="https://xn--pple-43d.com/icloud/unlock">Cyrillic apple</button>
+          <button type="button" data-u="https://www.linkedin.com/in/papakobosomtwe">My LinkedIn</button>
+        </div>
+        <div id="phOut"></div>
+      </div>
+
+      <div class="lab-panel" role="tabpanel" id="p-pass" aria-labelledby="t-pass" hidden>
+        <label class="lab-l" for="pwIn">Type a password to test. Please don't use one you actually use.</label>
+        <div class="lab-in"><input id="pwIn" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="e.g. Summer2024!"><button class="btn" id="pwShow" type="button" aria-pressed="false">Show</button><button class="btn primary" id="pwGo" type="button">Check breaches</button></div>
+        <div class="pw-meter" aria-hidden="true"><i id="pwBar"></i></div>
+        <div class="pw-grid">
+          <div><span>Entropy</span><b id="pwEnt">–</b></div>
+          <div><span>Offline crack time</span><b id="pwCrack">–</b></div>
+          <div><span>Seen in data breaches</span><b id="pwBreach">–</b></div>
+        </div>
+        <ul class="pw-notes" id="pwNotes"></ul>
+        <div class="pw-hash" id="pwHash"></div>
+      </div>
+
+      <div class="lab-panel" role="tabpanel" id="p-fp" aria-labelledby="t-fp" hidden>
+        <div class="fp">
+          <div class="fp-id">
+            <span>Your browser fingerprint</span>
+            <b id="fpId">computing…</b>
+            <p>Built from the details on the right, without cookies or permission. Ad-tech scripts use IDs like this to follow you across sites. This one is computed here, and nothing is sent or stored.</p>
+          </div>
+          <dl class="fp-list" id="fpList"></dl>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="research">
+    <div class="sec-head">
+      <div><p class="kicker">Research</p><h2>Published <em>&amp; in progress.</em></h2></div>
+    </div>
+    <div class="papers">
+      <a class="paper spot lead-paper" href="https://arxiv.org/abs/2407.17256" target="_blank" rel="noopener">
+        <span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9l-6-6Z"/><path d="M14 3v6h6M8 13h8M8 17h6"/></svg></span>
+        <span><h3>Critical Infrastructure Security: Penetration Testing &amp; Exploit Development Perspectives</h3><small>arXiv · MSc research, University of Guelph</small></span>
+        <span class="go">Read paper ↗</span>
+      </a>
+      <div class="paper spot"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 3a9 9 0 1 0 9 9"/><path d="M12 7v5l3 3"/></svg></span><span><h3>Improving the usability of LLMs for fake news detection</h3><small>Testing and evaluating LLM outputs</small></span><span></span></div>
+      <div class="paper spot"><span class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="11" width="18" height="10" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><span><h3>Privacy impact assessment under PIPEDA &amp; GDPR</h3><small>Plus an analysis of video gaming privacy policies</small></span><span></span></div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="sec-head">
+      <div><p class="kicker">Skills</p><h2>The toolkit.</h2></div>
+      <div class="sec-side">
+        <p class="sec-note">Solid lines are tools I've used on the job or in my own projects. Dashed lines are labs and coursework.</p>
+        <div class="row"><button class="btn sm" id="dropBtn" type="button">Drop the toolkit</button><button class="btn sm" id="shakeBtn" type="button" hidden>Shake it</button></div>
+      </div>
+    </div>
+    <div class="skills">
+      <div class="sk spot"><h4>Security operations</h4><div class="chips"><span>Microsoft Sentinel</span><span>Defender for Endpoint</span><span>Fortinet logs</span><span>Kibana</span><span>Incident response</span><span>Rogue network scans</span></div></div>
+      <div class="sk spot"><h4>Identity &amp; endpoint</h4><div class="chips"><span>Entra ID</span><span>Intune / Endpoint Manager</span><span>Purview</span><span>Access reviews</span><span>Provisioning</span></div></div>
+      <div class="sk spot"><h4>GRC &amp; risk</h4><div class="chips"><span>ISO 27001</span><span>ISO 22301</span><span>Risk registers</span><span>Vendor reviews</span><span>Audit evidence</span><span>PCI DSS docs</span><span>Policy</span></div></div>
+      <div class="sk spot"><h4>Vulnerability management</h4><div class="chips"><span>CVE</span><span>CVSS</span><span>CISA KEV</span><span>OWASP Top 10</span><span>Phishing simulations</span></div></div>
+      <div class="sk spot"><h4>Development</h4><div class="chips"><span>Python</span><span>pandas</span><span>FastAPI</span><span>React</span><span>TypeScript</span><span>PostgreSQL</span><span>SQL</span><span>Docker</span><span>REST APIs</span></div></div>
+      <div class="sk spot"><h4>IT support &amp; networking</h4><div class="chips"><span>ServiceNow</span><span>Troubleshooting</span><span>On/offboarding</span><span>Windows</span><span>Linux</span><span>TCP/IP</span><span>DNS</span><span>TLS</span></div></div>
+      <div class="sk spot lab wide"><h4>Labs &amp; coursework <small>Exposure</small></h4><div class="chips"><span>Splunk</span><span>QRadar</span><span>Active Directory</span><span>NIST CSF</span><span>MITRE ATT&amp;CK</span><span>PIPEDA</span><span>GDPR</span><span>Kali Linux</span><span>Metasploit</span><span>Wireshark</span><span>CTFs</span><span>Azure</span><span>GCP</span></div></div>
+    </div>
+  </section>
+
+  <section id="education">
+    <div class="creds">
+      <div class="cred spot">
+        <p class="kicker">Education</p>
+        <div class="deg"><h3>MSc, Cybersecurity &amp; Threat Intelligence</h3><p>University of Guelph · 2025</p></div>
+        <div class="deg"><h3>BSc, Management Information Systems</h3><p>Ashesi University, Ghana · 2022 · Dean's List · Co-organized the first student business fair</p></div>
+      </div>
+      <div class="cred spot">
+        <p class="kicker">Certifications</p>
+        <div class="certs">
+          <div class="cert on"><b>Security+</b><span>CompTIA</span></div>
+          <div class="cert on"><b>Certified in Cybersecurity</b><span>ISC2 CC</span></div>
+          <div class="cert"><b>Cybersecurity Essentials &amp; Threat Mgmt</b><span>Cisco</span></div>
+          <div class="cert plan"><b>SC-200</b><span>Microsoft · planned</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="other" class="sec-other">
+    <div class="sec-head"><div><p class="kicker">Also</p><h2 class="h2-sm">Other experience</h2></div></div>
+    <div class="others">
+      <div class="oth spot"><h3>Production Associate · Polycon Industries (Magna)</h3><p>Quality inspections under strict safety and compliance procedures in a high-volume plant.</p><span class="when">Oct 2025 – present</span></div>
+      <div class="oth spot"><h3>Sales Assistant · DNA Auto Source</h3><p>Customer and vendor contact, payments, invoice reconciliation and order follow-up.</p><span class="when">Feb 2024 – Jun 2024</span></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <p class="kicker">Contact</p>
+    <h2>Let's get your team covered.</h2>
+    <p>I'm interviewing now for security analyst, GRC, SOC and IT support roles in Ontario or remote. Email is the fastest way to reach me.</p>
+    <div class="mailrow">
+      <span class="email" id="email">papa.orleans-bosomtwe@outlook.com</span>
+      <button class="btn" id="copy" type="button">Copy email</button>
+      <a class="btn primary" href="https://www.linkedin.com/in/papakobosomtwe" target="_blank" rel="noopener">Message on LinkedIn ↗</a>
+    </div>
+    <p class="clock" id="clock"></p>
+  </section>
+</main>
+
+<button class="sfx" id="sfx" type="button" aria-pressed="false" aria-label="Sound effects" title="Sound effects off">
+  <svg class="s-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="m23 9-6 6m0-6 6 6"/></svg>
+  <svg class="s-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M11 5 6 9H2v6h4l5 4V5Z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14"/></svg>
+</button>
+<button class="fab" id="fab" type="button" aria-haspopup="dialog"><b>&gt;_</b><span class="fab-l">Interview my terminal</span><kbd>/</kbd></button>
+<dialog id="tty" aria-label="Interactive terminal">
+  <div class="term-bar"><span></span><span></span><span></span><em>guest@papa — soc-shell</em><button class="tty-x" id="ttyx" type="button" aria-label="Close terminal">✕</button></div>
+  <div class="tty-out" id="ttyout" aria-live="polite"></div>
+  <form class="tty-in" id="ttyform"><label for="ttyin">guest@papa:~$</label><input id="ttyin" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="type help and press Enter"></form>
+</dialog>
+
+<div id="flash" aria-hidden="true"></div>
+<canvas id="trail" aria-hidden="true"></canvas>
+<div id="clrPop" hidden role="dialog" aria-label="Clearance level"><div id="clrBody"></div></div>
+<div id="lvlup" hidden aria-hidden="true"><div class="lv-in"><p>Clearance upgraded</p><b id="lvlName">ANALYST</b></div></div>
+<div id="breach" hidden role="dialog" aria-modal="true" aria-label="Breach simulation">
+  <div class="br-alarm" aria-hidden="true"></div>
+  <button class="br-x" id="brX" type="button">Skip simulation</button>
+  <div class="br-in" aria-live="polite">
+    <p class="br-k" id="brK">Simulation</p>
+    <h2 class="br-h" id="brH" data-text="INTRUSION DETECTED">INTRUSION DETECTED</h2>
+    <pre class="br-log" id="brLog"></pre>
+    <ol class="br-steps" id="brSteps" hidden></ol>
+    <div class="br-rep" id="brRep" hidden>
+      <h3>Contained in <b id="brTime">4.2s</b></h3>
+      <dl>
+        <div><dt>Attack path</dt><dd>Password spray → mailbox rule → macro malware → lateral movement</dd></div>
+        <div><dt>Data exfiltrated</dt><dd>0 bytes</dd></div>
+        <div><dt>Devices isolated</dt><dd>1</dd></div>
+        <div><dt>Accounts reset</dt><dd>3</dd></div>
+        <div><dt>Root cause</dt><dd>A curious visitor pressed the button</dd></div>
+        <div><dt>Status</dt><dd>Closed · lessons learned filed</dd></div>
+      </dl>
+      <p>That's the job, minus the coffee. I'd love to do it for your team.</p>
+      <div class="row"><a class="btn primary" href="mailto:papa.orleans-bosomtwe@outlook.com?subject=Hire%20the%20responder">Hire the responder</a><button class="btn" id="brClose" type="button">Back to the site</button></div>
+    </div>
+  </div>
+</div>
+<div id="toasts" aria-live="polite"></div>
+<div id="win" hidden role="dialog" aria-modal="true" aria-labelledby="wint">
+  <canvas id="confetti" aria-hidden="true"></canvas>
+  <div class="win-card">
+    <p class="kicker">3 / 3 flags captured</p>
+    <h2 id="wint">CTF complete.</h2>
+    <p>You read the source, decoded the secret and switched sides. That curiosity is exactly what I bring to a security team. Let's talk.</p>
+    <div class="row">
+      <a class="btn primary" href="mailto:papa.orleans-bosomtwe@outlook.com?subject=I%20beat%20your%20CTF">Email Papa</a>
+      <a class="btn" href="https://www.linkedin.com/in/papakobosomtwe" target="_blank" rel="noopener">LinkedIn ↗</a>
+      <button class="btn" id="winx" type="button">Back to the site</button>
+    </div>
+  </div>
+</div>
+
+<footer><div class="wrap"><span>© 2026 Papa Kobina Orleans-Bosomtwe</span><span class="redflag">flag{r3d_t34m_unl0ck3d}</span><span>Guelph, Ontario · Built by hand, no trackers</span></div></footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="site.js"></script>
