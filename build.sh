@@ -18,10 +18,10 @@ cat <<'HEAD'
 <link rel="canonical" href="https://papaorleansbosomtwe.vercel.app">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%235cc8ff'/%3E%3Ctext x='16' y='21' font-family='monospace' font-size='13' font-weight='700' text-anchor='middle' fill='%23070a12'%3EPO%3C/text%3E%3C/svg%3E">
 HEAD
-grep -v 'claude:viewport-fit-sides' body.html | sed '/^<canvas id="net"/,$d'
+grep -v 'claude:viewport-fit-sides' body.html | sed '/^<a class="skip"/,$d'
 echo '</head>'
 echo '<body>'
-sed -n '/^<canvas id="net"/,$p' body.html
+sed -n '/^<a class="skip"/,$p' body.html
 echo '</body>'
 echo '</html>'
 } > index.html

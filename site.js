@@ -47,16 +47,16 @@
   scene.add(new T.Mesh(new T.SphereGeometry(R*1.22, 64, 64), new T.ShaderMaterial({
     uniforms: atmU, transparent: true, depthWrite: false, blending: ADD, side: T.BackSide,
     vertexShader: 'varying vec3 n;void main(){n=normalize(normalMatrix*normal);gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0);}',
-    fragmentShader: 'uniform vec3 c;varying vec3 n;void main(){float i=pow(max(0.0,0.62-dot(n,vec3(0.0,0.0,1.0))),3.0)*0.9;gl_FragColor=vec4(c*i,i);}'
+    fragmentShader: 'uniform vec3 c;varying vec3 n;void main(){float i=pow(max(0.0,0.62-dot(n,vec3(0.0,0.0,1.0))),3.0)*0.9;gl_FragColor=vec4(c*i*0.3,i*0.3);}'
   })));
 
   /* home: Guelph, with a shield dome */
   var HOME = [43.55, -80.25], H = v3(HOME, R);
   var homeDot = new T.Mesh(new T.SphereGeometry(.03, 16, 16), new T.MeshBasicMaterial({color: new T.Color(P.home)}));
   homeDot.position.copy(H); world.add(homeDot);
-  var homeGlow = glow(P.home, .42); homeGlow.position.copy(H); world.add(homeGlow);
+  var homeGlow = glow(P.home, .2); homeGlow.position.copy(H); world.add(homeGlow);
   var dome = new T.Mesh(new T.SphereGeometry(.27, 28, 12, 0, Math.PI*2, 0, Math.PI/2),
-    new T.MeshBasicMaterial({color: new T.Color(P.home), wireframe: true, transparent: true, opacity: .25, blending: ADD, depthWrite: false}));
+    new T.MeshBasicMaterial({color: new T.Color(P.home), wireframe: true, transparent: true, opacity: .14, blending: ADD, depthWrite: false}));
   dome.position.copy(H); dome.quaternion.setFromUnitVectors(UP, H.clone().normalize()); world.add(dome);
 
   /* orbit + satellites */
@@ -64,7 +64,7 @@
   var oc = []; for (var o = 0; o <= 128; o++){ var an = o/128*Math.PI*2; oc.push(new T.Vector3(Math.cos(an)*R*1.3, Math.sin(an)*R*1.3, 0)); }
   var orbM = new T.LineBasicMaterial({color: new T.Color(P.home), transparent: true, opacity: .22, depthWrite: false});
   orbit.add(new T.Line(new T.BufferGeometry().setFromPoints(oc), orbM));
-  var sats = [glow(P.home, .2), glow(P.arc, .16)]; sats.forEach(function(s){ orbit.add(s); });
+  var sats = [glow(P.home, .09), glow(P.arc, .07)]; sats.forEach(function(s){ orbit.add(s); });
 
   /* impact rings */
   var rings = [];
@@ -87,7 +87,7 @@
     }
     var g = new T.BufferGeometry().setFromPoints(pts); g.setDrawRange(0, 0);
     var mat = new T.LineBasicMaterial({color: new T.Color(P.arc), transparent: true, opacity: .95, blending: ADD, depthWrite: false});
-    var line = new T.Line(g, mat), head = glow(P.arc, .24), src = glow(P.arc, .16);
+    var line = new T.Line(g, mat), head = glow(P.arc, .1), src = glow(P.arc, .07);
     src.position.copy(from); world.add(line); world.add(head); world.add(src);
     arcs.push({line: line, g: g, mat: mat, head: head, src: src, pts: pts, to: to, t: 0, sp: .0045 + Math.random()*.005, done: false, fade: 1});
   }
@@ -155,8 +155,8 @@
     world.rotation.x = .5 + ty*.45;
     if (!reduce && now - last > (red ? 480 : 680) && arcs.length < 10){ last = now; spawn(); }
     step();
-    dome.material.opacity = .16 + .1*Math.sin(t*3);
-    homeGlow.scale.setScalar(.38 + .08*Math.sin(t*4));
+    dome.material.opacity = .12 + .04*Math.sin(t*3);
+    homeGlow.scale.setScalar(.18 + .04*Math.sin(t*4));
     sats[0].position.set(Math.cos(t*.5)*R*1.3, Math.sin(t*.5)*R*1.3, 0);
     sats[1].position.set(Math.cos(t*.33 + 2)*R*1.3, Math.sin(t*.33 + 2)*R*1.3, 0);
     if (!reduce){
@@ -170,61 +170,6 @@
 })();
 (function(){
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  /* network canvas: nodes drift, links form when close, a few nodes flag amber like hot alerts */
-  var c = document.getElementById('net'), x = c.getContext('2d'), W, H, dpr, nodes = [];
-  function size(){
-    dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = c.clientWidth; H = c.clientHeight; c.width = W * dpr; c.height = H * dpr; x.setTransform(dpr,0,0,dpr,0,0);
-    var n = Math.round(Math.min(90, W * H / 16000)); nodes = [];
-    for (var i = 0; i < n; i++) nodes.push({x:Math.random()*W, y:Math.random()*H, vx:(Math.random()-.5)*.25, vy:(Math.random()-.5)*.25, hot:Math.random()<.07, p:Math.random()*6.28});
-  }
-  function draw(t){
-    x.clearRect(0,0,W,H);
-    for (var i = 0; i < nodes.length; i++){
-      var a = nodes[i];
-      if (!reduce){ a.x += a.vx; a.y += a.vy; if (a.x<0||a.x>W) a.vx*=-1; if (a.y<0||a.y>H) a.vy*=-1; }
-      for (var j = i+1; j < nodes.length; j++){
-        var b = nodes[j], dx = a.x-b.x, dy = a.y-b.y, d = dx*dx+dy*dy;
-        if (d < 19600){ x.strokeStyle = 'rgba(' + (window.__glow || '92,200,255') + ',' + (0.16*(1-d/19600)) + ')'; x.lineWidth = 1; x.beginPath(); x.moveTo(a.x,a.y); x.lineTo(b.x,b.y); x.stroke(); }
-      }
-    }
-    for (var k = 0; k < nodes.length; k++){
-      var p = nodes[k];
-      if (p.hot){
-        var r = 2.6 + (reduce ? 0 : Math.sin(t/500 + p.p) * 1.2);
-        x.fillStyle = 'rgba(255,181,71,.18)'; x.beginPath(); x.arc(p.x,p.y,r*3.2,0,6.28); x.fill();
-        x.fillStyle = '#ffb547'; x.beginPath(); x.arc(p.x,p.y,r,0,6.28); x.fill();
-      } else { x.fillStyle = 'rgba(160,215,255,.55)'; x.beginPath(); x.arc(p.x,p.y,1.6,0,6.28); x.fill(); }
-    }
-    if (!reduce) requestAnimationFrame(draw);
-  }
-  size(); requestAnimationFrame(draw);
-  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(function(){ size(); if (reduce) draw(0); }, 150); });
-
-  /* cursor glow + card spotlight */
-  var g = document.getElementById('glow');
-  if (!reduce && matchMedia('(pointer:fine)').matches){
-    addEventListener('pointermove', function(e){ g.style.opacity = 1; g.style.left = e.clientX + 'px'; g.style.top = e.clientY + 'px'; }, {passive:true});
-  }
-  document.querySelectorAll('.spot').forEach(function(el){
-    el.addEventListener('pointermove', function(e){ var r = el.getBoundingClientRect(); el.style.setProperty('--mx', (e.clientX-r.left)+'px'); el.style.setProperty('--my', (e.clientY-r.top)+'px'); });
-  });
-
-  /* count-up stats: final values are already in the HTML; this only animates them once when seen */
-  if (!reduce && 'IntersectionObserver' in window){
-    var io = new IntersectionObserver(function(es){
-      es.forEach(function(en){
-        if (!en.isIntersecting) return; io.unobserve(en.target);
-        en.target.querySelectorAll('[data-count]').forEach(function(s){
-          var to = +s.dataset.count, from = s.dataset.from ? +s.dataset.from : 0, t0 = null, dur = 1400;
-          (function step(ts){ if (!t0) t0 = ts; var k = Math.min(1,(ts-t0)/dur), e = 1-Math.pow(1-k,3);
-            s.textContent = Math.round(from + (to-from)*e); if (k < 1) requestAnimationFrame(step); })(performance.now());
-        });
-      });
-    }, {threshold:.5});
-    document.querySelectorAll('.stat').forEach(function(s){ io.observe(s); });
-  }
 
   /* terminal: replays the alert feed with typing, looping */
   var term = document.getElementById('term');
@@ -255,49 +200,6 @@
 (function(){
   var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
   var root = document.documentElement;
-
-  /* ---- name decrypt ---- */
-  function scramble(){
-    var el = document.querySelector('h1 .grad'); if (!el || reduce) return;
-    var final = el.textContent, glyphs = '!<>-_\\/[]{}=+*^?#01XZ%$', f = 0;
-    (function tick(){
-      var out = '';
-      for (var i = 0; i < final.length; i++){
-        if (f > i * 1.6 + 6 || final[i] === '-') out += final[i];
-        else out += glyphs[(Math.random() * glyphs.length) | 0];
-      }
-      el.textContent = out; f++;
-      if (out !== final) setTimeout(tick, 32); else el.textContent = final;
-    })();
-  }
-
-  /* ---- boot sequence ---- */
-  var seen = false; try { seen = sessionStorage.getItem('papa-booted') === '1'; } catch (e) {}
-  if (reduce || seen) { setTimeout(scramble, 500); }
-  else {
-    root.classList.add('boot-on', 'boot-hold');
-    var boot = document.getElementById('boot'), log = document.getElementById('bootlog'), done = false, timers = [];
-    var lines = [
-      '&gt; establishing secure session ............. <b>OK</b>',
-      '&gt; syncing threat feeds  [NVD · CISA KEV] ... <b>OK</b>',
-      '&gt; verifying credentials   Security+ <b>✓</b>  ISC2 CC <b>✓</b>  MSc <b>✓</b>',
-      '&gt; loading analyst profile: orleans-bosomtwe.p',
-      '<span class="grant">ACCESS GRANTED</span>'
-    ];
-    lines.forEach(function(l, i){ timers.push(setTimeout(function(){ log.innerHTML += (i ? '\n' : '') + l; }, 120 + i * 330)); });
-    requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.getElementById('bootbar').style.width = '100%'; }); });
-    var finish = function(){
-      if (done) return; done = true; timers.forEach(clearTimeout);
-      try { sessionStorage.setItem('papa-booted', '1'); } catch (e) {}
-      root.classList.remove('boot-hold'); boot.classList.add('out');
-      setTimeout(function(){ root.classList.remove('boot-on'); }, 800);
-      setTimeout(scramble, 350);
-      removeEventListener('keydown', finish); removeEventListener('pointerdown', finish);
-    };
-    timers.push(setTimeout(finish, 2250));
-    setTimeout(finish, 4500); /* failsafe */
-    addEventListener('keydown', finish); addEventListener('pointerdown', finish);
-  }
 
   /* ---- globe: attacks arc toward Guelph and get blocked ---- */
   var gc = document.getElementById('globe');
@@ -362,32 +264,6 @@
   function prog(){ var m = document.documentElement.scrollHeight - innerHeight; bar.style.transform = 'scaleX(' + (m > 0 ? scrollY/m : 0) + ')'; ticking = false; }
   addEventListener('scroll', function(){ if (!ticking){ ticking = true; requestAnimationFrame(prog); } }, {passive: true}); prog();
 
-  /* ---- reticle cursor ---- */
-  if (!reduce && matchMedia('(pointer:fine)').matches){
-    root.classList.add('reticle-on');
-    var dot = document.getElementById('rdot'), ring = document.getElementById('rring'), mx = -100, my = -100, rx = -100, ry = -100;
-    addEventListener('pointermove', function(e){ mx = e.clientX; my = e.clientY; dot.style.transform = 'translate(' + mx + 'px,' + my + 'px)'; }, {passive: true});
-    (function follow(){ rx += (mx - rx) * .2; ry += (my - ry) * .2; ring.style.transform = 'translate(' + rx + 'px,' + ry + 'px)'; requestAnimationFrame(follow); })();
-    document.addEventListener('pointerover', function(e){ ring.classList.toggle('lock', !!e.target.closest('a,button,.spot')); });
-    document.addEventListener('pointerleave', function(){ mx = my = -100; });
-  }
-
-  /* ---- glitch section titles as they arrive ---- */
-  if (!reduce && 'IntersectionObserver' in window){
-    var gio = new IntersectionObserver(function(es){ es.forEach(function(en){ if (en.isIntersecting){ en.target.classList.add('glitch'); gio.unobserve(en.target); } }); }, {threshold: .6});
-    document.querySelectorAll('section h2').forEach(function(h){ gio.observe(h); h.addEventListener('animationend', function(){ h.classList.remove('glitch'); }); });
-  }
-
-  /* ---- 3D tilt ---- */
-  if (!reduce && matchMedia('(pointer:fine)').matches){
-    document.querySelectorAll('.b-main,.b-side,.b-sm,.stat,.cert').forEach(function(el){
-      el.classList.add('tilt');
-      el.addEventListener('pointermove', function(e){ var r = el.getBoundingClientRect(), px = (e.clientX - r.left)/r.width - .5, py = (e.clientY - r.top)/r.height - .5;
-        el.style.transform = 'perspective(900px) rotateX(' + (-py*6) + 'deg) rotateY(' + (px*7) + 'deg) translateY(-3px)'; });
-      el.addEventListener('pointerleave', function(){ el.style.transform = ''; });
-    });
-  }
-
   /* ---- interactive terminal ---- */
   var dlg = document.getElementById('tty'), out = document.getElementById('ttyout'), inp = document.getElementById('ttyin'), hist = [], hi = 0;
   var MAIL = 'papa.orleans-bosomtwe@outlook.com', LI = 'https://www.linkedin.com/in/papakobosomtwe';
@@ -424,7 +300,7 @@
   var greeted = false;
   function open(){
     if (dlg.open) return; dlg.showModal();
-    if (!greeted){ greeted = true; print('<span class="c">soc-shell v2.6</span> · connected to papa@guelph\nType <span class="c">help</span> to look around, or type <span class="c">ctf</span> to play capture the flag.\n'); }
+    if (!greeted){ greeted = true; print('<span class="c">papa@guelph</span>\nType <span class="c">help</span> to look around, or type <span class="c">ctf</span> to play capture the flag.\n'); }
     setTimeout(function(){ inp.focus(); }, 30);
   }
   window.__tty = {C: C, print: print, open: open, run: run};
@@ -1119,7 +995,7 @@
     var M = window.Matter, grid = document.querySelector('.skills');
     var H = Math.max(grid.offsetHeight, 520), arena = document.createElement('div');
     arena.className = 'arena'; arena.style.height = H + 'px';
-    arena.innerHTML = '<span class="arena-l">Drag and fling the skills. Yes, really.</span>';
+    arena.innerHTML = '<span class="arena-l">Drag the skills around. Put them back with the button above.</span>';
     grid.parentNode.insertBefore(arena, grid.nextSibling); grid.hidden = true;
     var W = arena.clientWidth, eng = M.Engine.create(), bodies = [], els = [];
     eng.gravity.y = 1.15;
@@ -1198,23 +1074,6 @@
       }
       if (parts.length || pings.length) requestAnimationFrame(draw); else { live = false; tx.clearRect(0, 0, TW, TH); }
     }
-  }
-
-  /* ---------- section labels decrypt as they scroll in ---------- */
-  if (!reduce && 'IntersectionObserver' in window){
-    var G = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#%&*<>/';
-    var kio = new IntersectionObserver(function(es){
-      es.forEach(function(en){
-        if (!en.isIntersecting) return; kio.unobserve(en.target);
-        var el = en.target, fin = el.textContent, f = 0;
-        el.setAttribute('aria-label', fin);
-        (function tk(){
-          el.textContent = fin.split('').map(function(ch, i){ return ch === ' ' || f > i*1.2 + 4 ? ch : G[(Math.random()*G.length)|0]; }).join('');
-          if (f++ < fin.length*1.2 + 6) setTimeout(tk, 30); else el.textContent = fin;
-        })();
-      });
-    }, {threshold: .9});
-    document.querySelectorAll('section .kicker').forEach(function(k){ kio.observe(k); });
   }
 
   /* ---------- terminal commands + XP for using them ---------- */
