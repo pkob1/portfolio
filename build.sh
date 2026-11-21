@@ -10,9 +10,9 @@ cat <<'HEAD'
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#070a12">
-<meta name="description" content="Papa Kobina Orleans-Bosomtwe, Information Security Analyst in Guelph, Ontario. MSc Cybersecurity & Threat Intelligence, Security+, ISC2 CC. Open to InfoSec, GRC, SOC and IT support roles.">
+<meta name="description" content="Papa Kobina Orleans-Bosomtwe, Information Security Analyst in Guelph, Ontario. MSc Cybersecurity & Threat Intelligence, ISC2 Certified in Cybersecurity. Open to InfoSec, GRC, SOC and IT support roles.">
 <meta property="og:title" content="Papa Kobina Orleans-Bosomtwe · Information Security Analyst">
-<meta property="og:description" content="MSc Cybersecurity, Security+, ISC2 CC. Microsoft Sentinel, Defender, Entra ID, ISO 27001/22301. Builder of VulnIntel. Open to InfoSec, GRC, SOC and IT support roles in Ontario or remote.">
+<meta property="og:description" content="MSc Cybersecurity, ISC2 CC. Microsoft Sentinel, Defender, Entra ID, ISO 27001/22301. Builder of VulnIntel. Open to InfoSec, GRC, SOC and IT support roles in Ontario or remote.">
 <meta property="og:url" content="https://papaorleansbosomtwe.vercel.app">
 <meta property="og:type" content="profile">
 <link rel="canonical" href="https://papaorleansbosomtwe.vercel.app">
